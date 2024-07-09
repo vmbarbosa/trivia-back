@@ -11,6 +11,9 @@ export const constants = {
             not_auth: 'Not Authorized',
             not_jwt: 'Not Valid JWT'
         }
+    },
+    bcrypt: {
+        rounds: 5
     }
 }
 
