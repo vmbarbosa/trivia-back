@@ -1,6 +1,7 @@
 import { response } from "./utils/response.js";
 import Question from "../models/question.js";
 import question_regex from "./validations/question.validation.js";
+import { questionsMessage } from "./utils/constants.js";
 
 const createAll = async (questionRequest) => {
   const wrongQuestions = [];
@@ -25,10 +26,11 @@ const createAll = async (questionRequest) => {
   };
 
   const message = wrongQuestions.length
-    ? "Some questions were not created successfully"
-    : "All questions were created successfully";
+    ? questionsMessage.wrong
+    : questionsMessage.correct;
 
   return response(true, message, res);
 };
 
 export { createAll };
+
