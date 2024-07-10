@@ -1,9 +1,9 @@
 import { response } from "./utils/response.js";
 import Question from "../models/question.js";
 import question_regex from "./validations/question.validation.js";
-import { questionsMessage } from "./utils/constants.js";
+import { questions_message } from "./utils/constants.js";
 
-const question = async (question_request) => {
+const create = async (question_request) => {
 
     const { error } = question_regex.validate(question_request)
     if (error) 
@@ -28,33 +28,37 @@ const question = async (question_request) => {
     return response(true, 'Question created.', question)
 }
 
-const createAll = async (questionRequest) => {
-  const wrongQuestions = [];
-  const correctQuestions = [];
+const create_all = async (question_request) => {
 
-  questionRequest.forEach((question) => {
+  const wrong_questions = []
+  const correct_questions = []
+
+  question_request.forEach(question => {
     const { error } = question_regex.validate(question);
     if (error) {
       question.error = error.details[0].message;
-      wrongQuestions.push(question);
+      wrong_questions.push(question);
     } else {
       const question_db = new Question(question);
-      correctQuestions.push(question_db);
+      correct_questions.push(question_db);
     }
-  });
+  })
 
-  const newQuestions = await Question.insertMany(correctQuestions);
+  const newQuestions = await Question.insertMany(correct_questions);
 
   const res = {
-    wrong: wrongQuestions,
+    wrong: wrong_questions,
     correct: newQuestions,
   };
 
-  const message = wrongQuestions.length
-    ? questionsMessage.wrong
-    : questionsMessage.correct;
+  const message = wrong_questions.length
+    ? questions_message.wrong
+    : questions_message.correct;
 
   return response(true, message, res);
 };
 
-export { question, createAll };
+export { 
+  create, 
+  create_all 
+}

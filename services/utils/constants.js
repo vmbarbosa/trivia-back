@@ -14,7 +14,7 @@ export const constants = {
     }
 }
 
-export const questionsMessage = {
+export const questions_message = {
     wrong: 'Some questions were not created successfully',
     correct: 'All questions were created successfully'
 }

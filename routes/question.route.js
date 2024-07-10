@@ -1,10 +1,10 @@
 import { Router } from "express";
-import { question, createAll } from '../controllers/question.controller.js';
+import { create, create_all } from '../controllers/question.controller.js';
 
 const question_router = Router()
 
-question_router.post('/create-all', createAll)
+question_router.post('/create', create)
 
-question_router.post('/create', question)
+question_router.post('/create-all', create_all)
 
 export default question_router
