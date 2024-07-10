@@ -1,5 +1,5 @@
 import { constants } from "../services/utils/constants.js";
-import { create as create_question, create_all as create_question_all } from "../services/question.service.js";
+import { create as create_question, create_all as create_question_all, update_question } from "../services/question.service.js";
 
 const { status } = constants.response;
 
@@ -13,7 +13,13 @@ const create_all = async (req, res) => {
   res.status(status.OK).json(questionDB);
 };
 
+const update = async (req, res, next) => {
+  const update_q = await update_question(req, res, next);
+  res.status(status.OK).json(update_q);
+}
+
 export { 
   create,
-  create_all 
+  create_all,
+  update
 }
