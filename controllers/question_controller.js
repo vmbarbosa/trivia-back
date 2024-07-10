@@ -1,7 +1,7 @@
 import question_service from "../services/question.service.js"
 import { constants } from "../services/utils/constants.js"
 
-const { status, message} = constants.response
+const { status } = constants.response
 
 
 const question = async (req, res) => {
