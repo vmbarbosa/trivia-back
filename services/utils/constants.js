@@ -14,3 +14,8 @@ export const constants = {
     }
 }
 
+export const questionsMessage = {
+    wrong: 'Some questions were not created successfully',
+    correct: 'All questions were created successfully'
+}
+
