@@ -13,7 +13,7 @@ router.use("/auth", auth_router);
 
 router.use('/question', valid_token, question_router)
 
-router.use("/user", user_router);
+router.use("/user", valid_token, user_router);
 
 
 //router.use('/score', valid_token, )
