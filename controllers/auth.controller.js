@@ -1,7 +1,7 @@
 import { register as register_service, login as login_service } from "../services/auth.service.js"
 import { constants } from "../services/utils/constants.js"
 
-const { status, message} = constants.response
+const { status } = constants.response
 
 
 const register = async (req, res) => {

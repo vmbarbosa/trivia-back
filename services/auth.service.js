@@ -1,5 +1,6 @@
 import { response } from "./utils/response.js"
 import User from '../models/user.js'
+import Score from '../models/score.js'
 import bcrypt from 'bcrypt'
 import { login_regex, user_regex } from "./validations/auth.validation.js"
 import jwt from "jsonwebtoken"
@@ -18,7 +19,7 @@ const register = async user_request => {
 
     delete user_request.confirm_password
 
-    const salt = await bcrypt.genSalt(5)
+    const salt = await bcrypt.genSalt()
     const hash = await bcrypt.hash(user_request.password, salt)
 
     user_request = {
@@ -26,11 +27,15 @@ const register = async user_request => {
         password: hash
     }
     
-    const user_db = new User(user_request)
+    const new_user = new User(user_request)
 
-    const new_user = await user_db.save()
+    await new_user.save()
 
-    return response(true, 'user created', new_user)
+    const user = { ...new_user.toObject() }
+
+    delete user.password
+
+    return response(true, 'user created', { user })
 }
 
 const login = async (login_request) => {
@@ -44,10 +49,21 @@ const login = async (login_request) => {
     const valid_password = await bcrypt.compare(login_request.password, user_db.password)
     if (!valid_password) return response(false, 'Incorrect password')
 
+    let score_db = await Score.findOne({ user_id: user_db._id })
+    if (!score_db) {
+        score_db = new Score({ user_id: user_db._id });
+        await score_db.save();
+    }
+
+    const user = {
+        ...user_db.toObject(),
+        score: score_db.toObject()
+    }
+
+    delete user.password
+
     const payload = {
-        id: user_db._id,
-        name: user_db.name,
-        cel: user_db.cel
+        user
     }
 
     const sign_options = { expiresIn: '3600s'}
