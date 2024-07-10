@@ -18,4 +18,6 @@ router.use("/user", valid_token, user_router);
 
 router.use('/score', valid_token, score_router);
 
+router.post("/send/sms", valid_token, get_user, send_sms);
+
 export default router;
