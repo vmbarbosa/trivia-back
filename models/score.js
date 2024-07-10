@@ -12,6 +12,7 @@ const score_schema = new Schema(
       type: Number,
       required: true,
       min: 0,
+      default: 0,
     },
     id_correct_answers: [
       {
