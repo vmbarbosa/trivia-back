@@ -7,4 +7,14 @@ const question_regex = Joi.object({
   correct_answer: Joi.string().trim().required()
 })
 
-export default question_regex
+const regex_upd_q = Joi.object({
+  difficulty: Joi.number().integer().min(1).max(3),
+  question: Joi.string().trim(),
+  wrong_answer: Joi.array().items(Joi.string()).length(3),
+  correct_answer: Joi.string().trim()
+}).min(1)
+
+export { 
+  question_regex, 
+  regex_upd_q
+}
