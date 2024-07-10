@@ -1,6 +1,6 @@
 import { response } from "./utils/response.js";
 import Question from "../models/question.js";
-import { regex_upd_q } from "./validations/question.validation.js";
+import { question_regex, regex_upd_q } from "./validations/question.validation.js";
 import { questions_message } from "./utils/constants.js";
 
 const create = async (question_request) => {
@@ -74,7 +74,6 @@ const update_question = async (req, res, next) => {
       return response(false, error.message);
   }
 }
-
 
 export { 
   create, 
