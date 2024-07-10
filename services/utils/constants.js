@@ -11,6 +11,14 @@ export const constants = {
             not_auth: 'Not Authorized',
             not_jwt: 'Not Valid JWT'
         }
+    },
+    bcrypt: {
+        rounds: 5
     }
+}
+
+export const questions_message = {
+    wrong: 'Some questions were not created successfully',
+    correct: 'All questions were created successfully'
 }
 
