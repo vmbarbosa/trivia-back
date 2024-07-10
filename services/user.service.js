@@ -1,7 +1,7 @@
 import { response } from "./utils/response.js"
 import { constants } from "./utils/constants.js"
 import User from "../models/user.js"
-import DeletedUser from '../models/deleteduser.js'
+import DeletedUser from '../models/deleted_user.js'
 import bcrypt from 'bcrypt'
 import { user_update_regex } from "./validations/user.validation.js"
 
@@ -51,12 +51,13 @@ const update = async (id, user_request) => {
     const user_saved = await userdb.save()
     return response(true, 'Update Success', user_saved)
 }
-const deleteUser = async (user_id) => {
 
-    const user_db = await User.findOne({ _id: user_id})
+const delete_user = async (id) => {
+
+    const user_db = await User.findOne({ _id: id})
     if (!user_db) return response(false, 'User don\'t exist') 
 
-    const deletedUser = new DeletedUser ({
+    const deleted_user = new DeletedUser ({
         name: user_db.name, 
         nickname: user_db.nickname, 
         cel: user_db.cel,
@@ -65,11 +66,14 @@ const deleteUser = async (user_id) => {
         date: user_db.date,
 
     })
-    await deletedUser.save()
-    await User.findByIdAndDelete(user_id)
+
+    await deleted_user.save()
+
+    await User.findByIdAndDelete(id)
+    
     return response(true, 'user deleted')
 }
 export {
     update,
-    deleteUser
+    delete_user
 } 

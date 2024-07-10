@@ -40,4 +40,4 @@ const deleted_user_schema = Schema({
    }
 })
 
-export default model('deleteduser', deleted_user_schema)
+export default model('deleted_user', deleted_user_schema)
