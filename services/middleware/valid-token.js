@@ -2,6 +2,7 @@ import jwt from "jsonwebtoken"
 import { constants } from "../utils/constants.js"
 import { response } from "../utils/response.js"
 
+
 export const valid_token = (req, res, next) => {
 
     const { status, message} = constants.response
@@ -18,3 +19,4 @@ export const valid_token = (req, res, next) => {
     }
 }
 
+export default valid_token
