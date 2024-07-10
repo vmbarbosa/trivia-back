@@ -5,6 +5,7 @@ import auth_router from "./auth.route.js";
 import question_router from "./question.route.js";
 import user_router from "./user.route.js"
 import score_router from "./score.route.js";
+import sms_router from './sms_route.js'
 
 const router = Router();
 
@@ -18,6 +19,6 @@ router.use("/user", valid_token, user_router);
 
 router.use('/score', valid_token, score_router);
 
-router.post("/send/sms", valid_token, get_user, send_sms);
+router.use("/send", valid_token, sms_router);
 
 export default router;

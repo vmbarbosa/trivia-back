@@ -1,8 +1,8 @@
 import { response } from "./utils/response.js";
 import Score from "../models/score.js";
 
-const get_all_scores = async (queryParams) => {
-    const { page = 1, pageSize = 50 } = queryParams;
+const get_all_scores = async (query_params) => {
+    const { page = 1, pageSize = 50 } = query_params;
     const limit = parseInt(pageSize);
     const skip = (parseInt(page) - 1) * limit;
     const scores_db = await Score.aggregate([
@@ -49,11 +49,11 @@ const get_all_scores = async (queryParams) => {
         );
     }
 
-    const all_active_scores = scores_db.map((scoreObj) => ({
-        nickname: scoreObj.user.nickname,
-        score: scoreObj.score,
-        correct_answers: scoreObj.id_correct_answers.length,
-        incorrect_answers: scoreObj.id_wrong_answers.length,
+    const all_active_scores = scores_db.map((score) => ({
+        nickname: score.user.nickname,
+        score: score.score,
+        correct_answers: score.id_correct_answers.length,
+        incorrect_answers: score.id_wrong_answers.length,
     }));
 
     return response(true, "Scores retrieved successfully.", all_active_scores);
