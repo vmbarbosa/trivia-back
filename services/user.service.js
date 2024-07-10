@@ -1,6 +1,7 @@
 import { response } from "./utils/response.js"
 import { constants } from "./utils/constants.js"
 import User from "../models/user.js"
+import DeletedUser from '../models/deleteduser.js'
 import bcrypt from 'bcrypt'
 import { user_update_regex } from "./validations/user.validation.js"
 
@@ -50,7 +51,25 @@ const update = async (id, user_request) => {
     const user_saved = await userdb.save()
     return response(true, 'Update Success', user_saved)
 }
+const deleteUser = async (user_id) => {
 
+    const user_db = await User.findOne({ _id: user_id})
+    if (!user_db) return response(false, 'User don\'t exist') 
+
+    const deletedUser = new DeletedUser ({
+        name: user_db.name, 
+        nickname: user_db.nickname, 
+        cel: user_db.cel,
+        password: user_db.password,
+        email: user_db.email,
+        date: user_db.date,
+
+    })
+    await deletedUser.save()
+    await User.findByIdAndDelete(user_id)
+    return response(true, 'user deleted')
+}
 export {
-    update
+    update,
+    deleteUser
 } 
