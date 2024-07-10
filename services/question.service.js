@@ -1,6 +1,9 @@
 import { response } from "./utils/response.js";
 import Question from "../models/question.js";
-import question_regex from "./validations/question.validation.js";
+import {
+  question_regex,
+  regex_upd_q,
+} from "./validations/question.validation.js";
 import { questions_message } from "./utils/constants.js";
 
 const create = async (question_request) => {
@@ -66,6 +69,23 @@ const create_all = async (question_request) => {
 
   return response(true, message, res);
 };
+const update_question = async (req, res, next) => {
+  const { error } = regex_upd_q.validate(req.body);
+  if (error) {
+    return response(false, error.details[0].message);
+  }
+
+  try {
+    const is_question = await Question.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true }
+    );
+    return response(true, "Update question success", is_question);
+  } catch (error) {
+    return response(false, error.message);
+  }
+};
 const delete_question_by_id = async (req) => {
   const { id } = req.params;
 
@@ -82,4 +102,5 @@ const delete_question_by_id = async (req) => {
     return response(false, questions_message.question_not_found);
   }
 };
-export { create, create_all, delete_question_by_id };
+
+export { create, create_all, update_question, delete_question_by_id };
