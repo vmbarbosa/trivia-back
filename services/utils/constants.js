@@ -16,6 +16,14 @@ export const constants = {
             invalid_phone: 'Invalid phone number',
             send_sms: 'Message sent',
         }
+    },
+    bcrypt: {
+        rounds: 5
     }
+}
+
+export const questions_message = {
+    wrong: 'Some questions were not created successfully',
+    correct: 'All questions were created successfully'
 }
 
