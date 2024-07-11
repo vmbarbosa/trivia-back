@@ -17,20 +17,21 @@ const valid_token = (req, res, next) => {
 };
 
 const valid_token_get_question = (req, res, next) => {
+
     const { status, message } = constants.response;
+
     const { authorization } = req.headers;
 
-    if (!authorization) {
-        req.user = null;
-        return next();
-    }
+    if (!authorization) return next()
 
     try {
-        const decoded = jwt.verify(authorization, process.env.TOKEN);
-        req.user = decoded;
-        next();
+        const { user } = jwt.verify(authorization, process.env.TOKEN)
+
+        req.user = user
+
+        next()
     } catch (error) {
-        res.status(status.not_auth).json(response(false, message.not_jwt));
+        res.status(status.not_auth).json(response(false, message.not_jwt))
     }
 };
 
