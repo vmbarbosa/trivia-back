@@ -1,6 +1,6 @@
 import { response } from "./utils/response.js";
 import Question from "../models/question.js";
-import { question_regex, regex_upd_q } from "./validations/question.validation.js";
+import { question_regex, question_update_regex } from "./validations/question.validation.js";
 import { questions_message } from "./utils/constants.js";
 import Score from "../models/score.js"
 
@@ -59,18 +59,14 @@ const create_all = async (question_request) => {
   return response(true, message, res);
 };
 
-const update_question = async (req, res, next) => {
+const update = async (id, question_request) => {
 
-  const { error } = regex_upd_q.validate(req.body);
-  if (error) {
-      return response(false, error.details[0].message);
-      
-  }
+  const { error } = question_update_regex.validate(question_request);
+  if (error) return response(false, error.details[0].message)
 
   try {
-      const is_question = await Question.findByIdAndUpdate(req.params.id, req.body, {new: true});
-      return response(true, "Update question success", is_question);;
-      
+      const question = await Question.findByIdAndUpdate(id, question_request, {new: true});
+      return response(true, "Update question success", question);;
   } catch (error) {
       return response(false, error.message);
   }
@@ -112,6 +108,6 @@ const formatQuestionResponse  = (inbound_question) => {
 export { 
   create, 
   create_all,
-  update_question,
+  update,
   getQuestion
 }
