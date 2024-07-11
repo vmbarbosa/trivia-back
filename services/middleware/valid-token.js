@@ -18,20 +18,19 @@ const valid_token = (req, res, next) => {
     }
 }
 
-// Se crea esta función para validar el get question HU10
 const valid_token_get_question = (req, res, next) => {
+
     const { status, message } = constants.response;
+
     const { authorization } = req.headers;
-    if (!authorization) {
-        req.user = null;
-        return next();
-    }
+    if (!authorization) return next()
+
     try {
-        const decoded = jwt.verify(authorization, process.env.TOKEN);
-        req.user = decoded;
-        next();
+        req.user = jwt.verify(authorization, process.env.TOKEN)
+
+        next()
     } catch (error) {
-        res.status(status.not_auth).json(response(false, message.not_jwt));
+        res.status(status.not_auth).json(response(false, message.not_jwt))
     }
 };
 

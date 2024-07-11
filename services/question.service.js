@@ -1,8 +1,27 @@
 import { response } from "./utils/response.js";
 import Question from "../models/question.js";
+import Score from "../models/score.js"
 import { question_regex, question_update_regex } from "./validations/question.validation.js";
 import { questions_message } from "./utils/constants.js";
-import Score from "../models/score.js"
+import { format_question_response } from './utils/utils.js'
+
+
+const get = async user => {
+
+  let question;
+
+  if (!user) question = await Question.aggregate([{ $sample: { size: 1 } }])
+
+  const user_score = await Score.findOne({ user_id: user._id })
+  const questions_id = [...user_score.id_correct_answers, ...user_score.id_wrong_answers]
+  
+  question = await Question.aggregate([
+      { $match: { _id: { $nin: questions_id } } },
+      { $sample: { size: 1 } }
+  ]);
+
+  return response(true, "question obtained", format_question_response(question))
+}
 
 const create = async (question_request) => {
 
@@ -66,48 +85,16 @@ const update = async (id, question_request) => {
 
   try {
       const question = await Question.findByIdAndUpdate(id, question_request, {new: true});
+      
       return response(true, "Update question success", question);;
   } catch (error) {
       return response(false, error.message);
   }
 }
 
-const getQuestion = async user => {
-  try {
-      let question;
-      if (user) {
-          const user_score = await Score.findOne({ user_id: user.user._id })
-          const questions_id = [...user_score.id_correct_answers, ...user_score.id_wrong_answers]
-          question = await Question.aggregate([
-              { $match: { _id: { $nin: questions_id } } },
-              { $sample: { size: 1 } }
-          ]);
-      } else {
-          question = await Question.aggregate([{ $sample: { size: 1 } }]);
-      }
-      const answer = formatQuestionResponse(question)
-      return response(true, "question obtained", answer)
-  } catch (error) {
-      return response(false, "error getting the question")
-  }
-}
-
-const formatQuestionResponse  = (inbound_question) => {
-  const { _id, difficulty, question, wrong_answer, correct_answer } = inbound_question[0]
-
-  const options = [...wrong_answer, correct_answer].sort(() => Math.random() - 0.5)
-  const question_response = {
-      "_id": _id,
-      "difficulty": difficulty,
-      "question": question,
-      "options": options
-  }
-  return question_response
-}
-
 export { 
+  get,
   create, 
   create_all,
-  update,
-  getQuestion
+  update
 }
