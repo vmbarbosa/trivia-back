@@ -16,7 +16,7 @@ const valid_token = (req, res, next) => {
     }
 };
 
-const valid_token_get_question = (req, res, next) => {
+const valid_token_or_next = (req, res, next) => {
 
     const { status, message } = constants.response;
 
@@ -35,4 +35,4 @@ const valid_token_get_question = (req, res, next) => {
     }
 };
 
-export { valid_token, valid_token_get_question };
+export { valid_token, valid_token_or_next };

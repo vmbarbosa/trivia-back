@@ -1,5 +1,11 @@
 import { constants } from "../services/utils/constants.js";
-import { create as create_question, create_all as create_question_all, update as update_question, get as get_question } from "../services/question.service.js";
+import { 
+  create as create_question,
+  create_all as create_question_all,
+  update as update_question,
+  get as get_question,
+  check_answer, save_score, return_answer_validation
+} from "../services/question.service.js";
 
 const { status } = constants.response;
 
@@ -23,9 +29,18 @@ const update = async (req, res) => {
   res.status(status.OK).json(question_db);
 }
 
+const result = async (req, res) => {
+  const validation = await check_answer(req, res)
+  if (req.isAuth && req.body.user_id) {
+    await save_score(req, res, validation.result, validation.question)
+  }
+  await return_answer_validation(req, res, validation.result)
+}
+
 export { 
   get,
   create,
   create_all,
-  update
+  update,
+  result
 }
