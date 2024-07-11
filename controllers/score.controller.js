@@ -1,12 +1,7 @@
 import { constants } from "../services/utils/constants.js"
-import { resetscore as resetscore_service, get_all_scores as get_all_scores_service } from "../services/score.service.js";
+import { get_all_scores as get_all_scores_service, reset_score as reset_score_service } from "../services/score.service.js";
 
-const { status, message } = constants.response;
-
-const resetscore = async (req, res) => {
-    const score_db = await resetscore_service(req.body);
-    res.status(score_db[0]).json(score_db[1]);
-}
+const { status } = constants.response;
 
 const get_all_scores = async (req, res) => {
     const scores_response = await get_all_scores_service(req.query);
@@ -14,4 +9,12 @@ const get_all_scores = async (req, res) => {
     res.status(status.OK).json(scores_response);
 }
 
-export { resetscore, get_all_scores };
+const reset_score = async (req, res) => {
+    const scores_response = await reset_score_service(req.body);
+    res.status(status.OK).json(scores_response);
+}
+
+export { 
+    get_all_scores, 
+    reset_score
+};
