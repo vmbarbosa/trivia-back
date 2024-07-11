@@ -26,7 +26,9 @@ const valid_token_get_question = (req, res, next) => {
     if (!authorization) return next()
 
     try {
-        req.user = jwt.verify(authorization, process.env.TOKEN)
+        const { user } = jwt.verify(authorization, process.env.TOKEN)
+
+        req.user = user
 
         next()
     } catch (error) {

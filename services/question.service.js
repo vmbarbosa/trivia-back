@@ -10,11 +10,14 @@ const get = async user => {
 
   let question;
 
-  if (!user) question = await Question.aggregate([{ $sample: { size: 1 } }])
+  if (!user) {
+    question = await Question.aggregate([{ $sample: { size: 1 } }])
+    return response(true, "question obtained", format_question_response(question))
+  }
 
   const user_score = await Score.findOne({ user_id: user._id })
   const questions_id = [...user_score.id_correct_answers, ...user_score.id_wrong_answers]
-  
+
   question = await Question.aggregate([
       { $match: { _id: { $nin: questions_id } } },
       { $sample: { size: 1 } }
