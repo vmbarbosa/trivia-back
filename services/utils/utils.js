@@ -1,3 +1,5 @@
+import { Types } from 'mongoose';
+
 const format_question_response  = inbound_question => {
 
   const { _id, difficulty, question, wrong_answer, correct_answer } = inbound_question[0]
@@ -14,6 +16,14 @@ const format_question_response  = inbound_question => {
   return question_response
 }
 
+const objectId_validator = (value, helpers) => {
+  if (!Types.ObjectId.isValid(value)) {
+    return helpers.error('any.invalid');
+  }
+  return value;
+};
+
 export {
-  format_question_response
+  format_question_response,
+  objectId_validator
 }

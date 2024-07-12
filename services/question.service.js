@@ -1,7 +1,7 @@
 import { response } from "./utils/response.js";
 import Question from "../models/question.js";
 import Score from "../models/score.js"
-import { question_regex, question_update_regex } from "./validations/question.validation.js";
+import { question_regex, question_result_regex, question_update_regex } from "./validations/question.validation.js";
 import { questions_message } from "./utils/constants.js";
 import { format_question_response } from './utils/utils.js'
 
@@ -95,59 +95,48 @@ const update = async (id, question_request) => {
   }
 }
 
-const check_answer = async (req, res) => {
-  const { id } = req.params;
-  const { answer } = req.body;
+const check_answer = async (id, question_request) => {
+
+  const { error } = question_result_regex.validate(question_request)
+  if (error) return response(false, error.details[0].message)
+
+  const { user_id, answer } = question_request
 
   try {
+
     const question = await Question.findById(id);
-
-    if (!question) {
-      return res.status(status.not_found).json(response(false, message.not_found));
-    }
-
-    const is_correct = question.correct_answer === answer;
+    if (!question) return response(false, 'Question don\'t exist')
+    
+    const is_correct = question.correct_answer === answer
 
     const result = {
       question_id: id,
       result: is_correct,
-    };
-
-    return { result, question };
-  } catch (error) {
-    return res.status(status.svr_error).json(response(false, error.message));
-  }
-}
-
-const save_score = async (req, res, validation, question) => {
-  const { id } = req.params;
-  const { user_id } = req.body;
-
-  try {
-    let user_score = await Score.findOne({ user_id });
-    if (!user_score) {
-      user_score = new Score({ user_id, score: 0, id_correct_answers: [], id_wrong_answers: [] });
     }
-    if (validation.result) {
-      user_score.score += question.difficulty;
-      user_score.id_correct_answers.push(id);
-    } else {
-      user_score.score = Math.max(0, user_score.score - 1);
-      user_score.id_wrong_answers.push(id);
+
+    if (user_id) {
+      
+      const user_score = await Score.findOne({ user_id });
+
+      if (is_correct) {
+        user_score.score += question.difficulty
+        user_score.id_correct_answers.push(id)
+      } else {
+        user_score.score = Math.max(0, user_score.score - 1);
+        user_score.id_wrong_answers.push(id);
+      }
+
+      await user_score.save();
+
+      result = {
+        ...result,
+        user_id
+      }
     }
-    await user_score.save();
-    validation.user_id = user_id;
-  } catch (error) {
-    return res.status(status.svr_error).json(response(false, error.message));
-  }
 
-}
-
-const return_answer_validation = async (req, res, result) => {
-  try {
-    return res.status(status.OK).json(response(true, "Pregunta verificada", result));
+    return response(true, 'Result check answer', result)
   } catch (error) {
-    return res.status(status.svr_error).json(response(false, error.message));
+    return response(false, error.message)
   }
 }
 
@@ -156,7 +145,5 @@ export {
   create, 
   create_all,
   update,
-  check_answer,
-  save_score,
-  return_answer_validation
+  check_answer  
 }

@@ -1,12 +1,5 @@
 import Joi from "joi"
-import { Types } from 'mongoose';
-
-const objectId_validator = (value, helpers) => {
-  if (!Types.ObjectId.isValid(value)) {
-    return helpers.error('any.invalid');
-  }
-  return value;
-};
+import { objectId_validator } from "../utils/utils.js"
 
 const score_regex = Joi.object({
   user_id: Joi.string().custom(objectId_validator).required(),
