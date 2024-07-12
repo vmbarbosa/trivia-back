@@ -1,8 +1,8 @@
 import { Router } from "express";
-import { get, create, create_all, update, result } from '../controllers/question.controller.js';
+import { get, create, create_all, update, result, delete_question_by_id } from '../controllers/question.controller.js';
 import { valid_token, valid_token_or_next } from "../services/middleware/valid-token.js"
 
-const question_router = Router()
+const question_router = Router();
 
 question_router.get('/get', valid_token_or_next, get)
 
@@ -16,4 +16,6 @@ question_router.put('/update/:id', valid_token, update)
 
 question_router.post('/result/:id', valid_token_or_next, result)
 
-export default question_router
+question_router.delete("/delete/:id", delete_question_by_id);
+
+export default question_router;

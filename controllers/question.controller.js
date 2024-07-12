@@ -1,4 +1,5 @@
 import { constants } from "../services/utils/constants.js";
+
 import { 
   create as create_question,
   create_all as create_question_all,
@@ -15,14 +16,19 @@ const get = async (req, res) => {
 }
 
 const create = async (req, res) => {
-  const question_db = await create_question(req.body)
-  res.status(status.OK).json(question_db)
-}
+  const question_db = await create_question(req.body);
+  res.status(status.OK).json(question_db);
+};
 
 const create_all = async (req, res) => {
   const question_db = await create_question_all(req.body);
   res.status(status.OK).json(question_db);
 };
+
+const delete_question_by_id = async (req, res) => {
+  const userDeleted = await delete_question(req);
+  res.status(status.OK).json(userDeleted);
+}
 
 const update = async (req, res) => {
   const question_db = await update_question(req.params.id, req.body);
@@ -39,5 +45,6 @@ export {
   create,
   create_all,
   update,
-  result
+  result,
+  delete_question_by_id
 }
