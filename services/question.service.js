@@ -137,10 +137,7 @@ const check_answer = async (id, question_request) => {
 
       await user_score.save();
 
-      result = {
-        ...result,
-        user_id
-      }
+      result.user_id = user_id
     }
 
     return response(true, 'Result check answer', result)

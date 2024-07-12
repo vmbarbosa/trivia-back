@@ -14,7 +14,7 @@ router.get("/test", test);
 router.use("/auth", auth_router);
 router.use('/question', question_router);
 router.use("/user", valid_token, user_router);
-router.use('/score', valid_token, score_router);
+router.use('/score', score_router);
 router.use("/send", valid_token, sms_router);
 
 export default router;

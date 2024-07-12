@@ -31,14 +31,14 @@ const update = async (req, res) => {
   res.status(status.OK).json(question_db);
 }
 
-const result = async (req, res) => {
-  const result = await check_answer(req.params.id, req.body)
-  res.status(status.OK).json(result);
-}
-
 const delete_question = async (req, res) => {
   const deleted = await delete_question_service(req.params.id);
   res.status(status.OK).json(deleted);
+}
+
+const result = async (req, res) => {
+  const result = await check_answer(req.params.id, req.body)
+  res.status(status.OK).json(result);
 }
 
 export { 
@@ -46,6 +46,6 @@ export {
   create,
   create_all,
   update,
-  result,
-  delete_question
+  delete_question,
+  result
 }
