@@ -5,6 +5,7 @@ import {
   create_all as create_question_all,
   update as update_question,
   get as get_question,
+  delete_question as delete_question_service,
   check_answer
 } from "../services/question.service.js";
 
@@ -25,11 +26,6 @@ const create_all = async (req, res) => {
   res.status(status.OK).json(question_db);
 };
 
-const delete_question_by_id = async (req, res) => {
-  const userDeleted = await delete_question(req);
-  res.status(status.OK).json(userDeleted);
-}
-
 const update = async (req, res) => {
   const question_db = await update_question(req.params.id, req.body);
   res.status(status.OK).json(question_db);
@@ -40,11 +36,16 @@ const result = async (req, res) => {
   res.status(status.OK).json(result);
 }
 
+const delete_question = async (req, res) => {
+  const deleted = await delete_question_service(req.params.id);
+  res.status(status.OK).json(deleted);
+}
+
 export { 
   get,
   create,
   create_all,
   update,
   result,
-  delete_question_by_id
+  delete_question
 }

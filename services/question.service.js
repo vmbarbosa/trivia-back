@@ -149,18 +149,15 @@ const check_answer = async (id, question_request) => {
   }
 };
 
-const delete_question_by_id = async (req) => {
-  const { id } = req.params;
+const delete_question = async (id) => {
 
   try {
-    const numDoc = await Question.countDocuments({});
-    if (numDoc == 0) return response(false, "Collection is empty");
-    const questionDeleted = await Question.findByIdAndDelete(id);
-    if (questionDeleted) {
-      return response(true, questions_message.question_deleted);
-    } else {
-      return response(false, questions_message.question_not_found);
-    }
+
+    const deleted = await Question.findByIdAndDelete(id)
+
+    if (!deleted) return response(false, questions_message.question_not_found)
+
+    return response(true, questions_message.question_deleted)
   } catch (error) {
     return response(false, questions_message.question_not_found);
   }
@@ -171,6 +168,6 @@ export {
   create, 
   create_all,
   update,
-  check_answer,
-  delete_question_by_id
+  delete_question,
+  check_answer
 }
