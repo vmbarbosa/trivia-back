@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { test } from "../controllers/main.controller.js";
 import { valid_token } from "../services/middleware/valid-token.js";
+import { get_user } from "../services/middleware/get-user.js"
 import auth_router from "./auth.route.js";
 import question_router from "./question.route.js";
 import user_router from "./user.route.js";
@@ -15,6 +16,6 @@ router.use("/auth", auth_router);
 router.use('/question', question_router);
 router.use("/user", valid_token, user_router);
 router.use('/score', score_router);
-router.use("/send", valid_token, sms_router);
+router.use("/send", valid_token, get_user, sms_router);
 
 export default router;

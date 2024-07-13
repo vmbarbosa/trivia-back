@@ -5,7 +5,7 @@ const { status } = constants.response;
 
 const send_sms = async (req, res) => {
   const response_twilio = await send_sms_service(req);
-  res.status(status.OK).json(response_twilio);
+  res.status(status.OK).json(response_twilio.body);
 };
 
 export default send_sms
